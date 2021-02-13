@@ -5,7 +5,7 @@ from typing import Optional
 from dotenv import load_dotenv
 from vkbottle.bot import Bot, Message
 
-from src.homework_storage.mongo import HomeworkStorage
+from homework_storage.mongo import HomeworkStorage
 
 load_dotenv()
 
@@ -13,6 +13,7 @@ storage = HomeworkStorage(
     os.environ.get("DB_NAME"),
     os.environ.get("COLLECTION")
 )
+
 bot = Bot(os.environ.get("BOT_TOKEN"))
 
 logging.basicConfig(level=logging.INFO)
