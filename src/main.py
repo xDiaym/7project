@@ -10,13 +10,12 @@ from homework_storage.mongo import HomeworkStorage
 load_dotenv()
 
 storage = HomeworkStorage(
-    os.environ.get("DB_NAME"),
-    os.environ.get("COLLECTION")
+    os.environ.get("DB_NAME"), os.environ.get("COLLECTION")
 )
 
 bot = Bot(os.environ.get("BOT_TOKEN"))
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 
 @bot.on.chat_message(
@@ -48,6 +47,19 @@ async def get_homework(message: Message, lesson: Optional[str] = None) -> None:
             )
         else:
             await message.answer("❌ Не могу найти задание/предмет")
+
+
+@bot.on.chat_message(text=["/помощь"])
+async def help_(message: Message):
+    await message.answer(
+        "👋 Привет! Я - бот, и теперь буду помогать вам обмениваться "
+        "домашним заданием.\n"
+        "📚 Список моих команд:\n"
+        "/добавить [предмет] [задание] - добавит задание по "
+        "выбранному предмету\n"
+        "/задание [предмет] - отправит задания по выбранному предмету\n"
+        "/помощь - отправит это сообщение"
+    )
 
 
 if __name__ == "__main__":
