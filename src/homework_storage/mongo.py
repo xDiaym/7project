@@ -2,7 +2,7 @@ from typing import Optional
 
 import motor.motor_asyncio
 
-from src.homework_storage.abstract_storage import ABCHomeworkStorage
+from .abstract_storage import ABCHomeworkStorage
 
 
 class HomeworkStorage(ABCHomeworkStorage):
