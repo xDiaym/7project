@@ -15,7 +15,7 @@ class HomeworkStorage(ABCHomeworkStorage):
     ) -> None:
         lesson = lesson.lower()
         await self._collection.find_one_and_update(
-            {"group_id": group_id, "lesson": lesson},
+            {"$and": [{"group_id": group_id}, {"lesson": lesson}]},
             {
                 "$set": {
                     "group_id": group_id,

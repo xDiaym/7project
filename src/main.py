@@ -62,7 +62,6 @@ def has_bot_invited(message: MessageMin) -> bool:
     )
 
 
-# When i change order of decorators the message send twice. IDK whats going on.
 @bot.on.chat_message(text=["/помощь"])
 @bot.on.chat_message(FuncRule(has_bot_invited))
 async def help_(message: Message):
