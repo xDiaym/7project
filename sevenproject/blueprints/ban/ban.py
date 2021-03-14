@@ -2,6 +2,7 @@ import re
 from typing import Optional
 
 from vbml import Patcher
+from vkbottle import CodeErrorFactory
 from vkbottle.bot import Blueprint, Message
 from vkbottle.dispatch.rules.bot import VBMLRule
 
@@ -21,22 +22,22 @@ def mention_validator(value: str) -> int:
         return int(group[0])
 
 
-async def is_admin(peer_id: int, user_id: int) -> bool:
-    response = await bp.api.messages.get_conversation_members(peer_id)
+async def is_admin(peer_id: int, user_id: int) -> Optional[bool]:
+    try:
+        response = await bp.api.messages.get_conversation_members(peer_id)
+    except CodeErrorFactory(917):
+        return None
     admins = filter(lambda x: x.is_admin or x.is_owner, response.items)
     return user_id in map(lambda x: x.member_id, admins)
 
 
 @bp.on.chat_message(VBMLRule(['/бан', '/бан <user:mention>'], patcher))
 async def ban(message: Message, user: Optional[int] = None) -> None:
-    try:
-        has_permission = await is_admin(message.peer_id, message.from_id)
-    except:
-        await message.answer("❌ У меня нет прав адинистратора!")
-        return
-
+    has_permission = await is_admin(message.peer_id, message.from_id)
     if user is None:
         await message.answer("❌ Вы не указали пользователя!")
+    elif has_permission is None:
+        await message.answer("❌ У меня нет прав адинистратора!")
     elif not has_permission:
         await message.answer("❌ Вы не админ!")
     else:
@@ -46,14 +47,11 @@ async def ban(message: Message, user: Optional[int] = None) -> None:
 
 @bp.on.chat_message(VBMLRule(['/разбан', '/разбан <user:mention>'], patcher))
 async def unban(message: Message, user: Optional[int] = None) -> None:
-    try:
-        has_permission = await is_admin(message.peer_id, message.from_id)
-    except:
-        await message.answer("❌ У меня нет прав адинистратора!")
-        return
-
+    has_permission = await is_admin(message.peer_id, message.from_id)
     if user is None:
-        await message.answer("❌ Вы не указали пользователя")
+        await message.answer("❌ Вы не указали пользователя!")
+    elif has_permission is None:
+        await message.answer("❌ У меня нет прав адинистратора!")
     elif not has_permission:
         await message.answer("❌ Вы не админ!")
     else:
