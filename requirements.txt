@@ -1,3 +1,4 @@
 python-dotenv~=0.15.0
 vkbottle~=3.0
 motor~=2.3.1
+vbml~=1.1

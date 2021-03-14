@@ -6,7 +6,7 @@ load_dotenv()
 
 
 class BotConfig:
-    ID = os.environ.get("BOT_ID")
+    ID = int(os.environ.get("BOT_ID"))
     TOKEN = os.environ.get("BOT_TOKEN")
 
 

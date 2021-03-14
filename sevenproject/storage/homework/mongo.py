@@ -2,11 +2,11 @@ from typing import Optional
 
 import motor.motor_asyncio
 
-from .abstract_storage import ABCHomeworkStorage
+from .abstract import ABCHomeworkStorage
 
 
 class HomeworkStorage(ABCHomeworkStorage):
-    def __init__(self, table: str, collection: str, *args, **kwargs) -> None:
+    def __init__(self, table: str, collection: str = "homework", *args, **kwargs) -> None:
         client = motor.motor_asyncio.AsyncIOMotorClient(*args, **kwargs)
         self._collection = client[table][collection]
 

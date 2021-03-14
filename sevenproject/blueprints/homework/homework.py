@@ -3,10 +3,11 @@ from typing import Optional
 from vkbottle.bot import Blueprint, Message
 
 from config import DatabaseConfig
-from sevenproject.homework.homework_storage.mongo import HomeworkStorage
+from sevenproject.blueprints.ban.ban import db
+from sevenproject.storage.homework.mongo import HomeworkStorage
 
 bp = Blueprint()
-storage = HomeworkStorage(DatabaseConfig.NAME, DatabaseConfig.COLLECTION)
+storage = HomeworkStorage(DatabaseConfig.NAME)
 
 
 @bp.on.chat_message(
@@ -19,6 +20,8 @@ async def set_homework(
 ) -> None:
     if lesson is None or homework is None:
         await message.answer("❌ Использование: /добавить <lesson> <homework>")
+    elif await db.was_banned(message.group_id, message.from_id):
+        await message.answer("❌ Вы не можете добавлять задания")
     else:
         await storage.set_homework(message.group_id, lesson, homework)
         await message.answer(
